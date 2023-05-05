@@ -1,0 +1,30 @@
+{
+  "name": "projeto-drivenpass",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "npx nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MoniqueMSouza/projeto-drivenpass.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MoniqueMSouza/projeto-drivenpass/issues"
+  },
+  "homepage": "https://github.com/MoniqueMSouza/projeto-drivenpass#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "joi": "^17.9.2",
+    "pg": "^8.10.0",
+    "uuid": "^9.0.0"
+  }
+}

@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "npx nodemon src/app.js"
+    "start": "npx nodemon src/app.ts"
   },
   "repository": {
     "type": "git",
@@ -26,5 +26,10 @@
     "joi": "^17.9.2",
     "pg": "^8.10.0",
     "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
   }
 }

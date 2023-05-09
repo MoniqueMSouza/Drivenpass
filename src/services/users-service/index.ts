@@ -33,7 +33,7 @@ async function signIn({ email, password }: UserInput) {
   delete validUser.password
 
 
-  const token = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '3h' })
+  const token = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: 86400 })
 
   return {
     User: validUser,

@@ -16,4 +16,12 @@ async function findUser(email:string) {
     })
 }
 
-export default { createUser, findUser }
+async function findById(id:number) {         
+    return prisma.user.findFirst({
+        where: {
+            id: id,
+        },
+    })
+}
+
+export default { createUser, findUser,findById }

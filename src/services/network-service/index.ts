@@ -1,5 +1,5 @@
-import { CreateCredentialParams, networkService } from "../../protocols";
-import { Credential, Network } from "@prisma/client";
+import { networkService } from "../../protocols";
+import { Network } from "@prisma/client";
 import networkRepositorie from "../../repositories/network-repository/network-repository.js"
 import Cryptr from "cryptr";
 
@@ -27,10 +27,19 @@ async function getNetworks(userId:number) {
     return networks
 }
 
-async function getNetworksId({ }){
+async function getNetworkById(userId: number, networkId: number) {
+
+    const networks = await networkRepositorie.listNetworkById(userId, networkId);
+    if (networks.length === 0) {
+        throw { type: "BadRequest", message: "You can not do that!" };
+    }
+    networks.map((network: networkService) => (network.password = cryptr.decrypt(network.password)));
+
+    return networks
+
 }
 
 async function deleteNetwork ({}){    
 }
 
-export default { newNetwork, getNetworks, getNetworksId, deleteNetwork }
+export default { newNetwork, getNetworks, getNetworkById, deleteNetwork }

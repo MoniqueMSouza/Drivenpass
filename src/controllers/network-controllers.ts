@@ -1,6 +1,5 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import httpStatus from 'http-status';
-import credentialRepository from '../repositories/credential-repository/credential-repository.js'
 import networkService from '../services/network-service/index.js'
 import { AuthenticatedRequest } from '../middlewares/authentication-middleware.js';
 import { CreateNetwork } from '../protocols.js'
@@ -34,16 +33,18 @@ export async function getNetworks(req: AuthenticatedRequest, res: Response) {
 }
 
 export async function getNetworksId(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+  const { networkId } = req.params;
 
+  const network = await networkService.getNetworkById(userId, parseInt(networkId));
 
   try {
-    return res.status(httpStatus.OK).send()
+    return res.status(httpStatus.OK).send(network)
 
   } catch (error) {
     return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
-
 
 export async function deleteNetwork(req: AuthenticatedRequest, res: Response) {
 

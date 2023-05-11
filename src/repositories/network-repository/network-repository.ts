@@ -15,6 +15,15 @@ async function listNetwork(userId:number) {
     })
 };
 
+async function listNetworkById(userId:number, networkId:number) {
+    return prisma.network.findMany({
+        where: {
+            userId: userId,
+            id: networkId
+        },
+    })
+};
 
 
-export default { newNetwork, listNetwork}
+
+export default { newNetwork, listNetwork, listNetworkById}

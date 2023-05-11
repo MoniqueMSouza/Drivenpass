@@ -7,6 +7,14 @@ async function newNetwork(data: Prisma.NetworkCreateManyInput) {
 });
 };
 
+async function listNetwork(userId:number) {
+    return prisma.network.findMany({
+        where: {
+            userId: userId,
+        },
+    })
+};
 
 
-export default { newNetwork}
+
+export default { newNetwork, listNetwork}

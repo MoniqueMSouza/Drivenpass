@@ -21,10 +21,12 @@ export async function newNetwork(req: AuthenticatedRequest, res: Response) {
 };
 
 export async function getNetworks(req: AuthenticatedRequest, res: Response) {
- 
+  const { userId } = req;
+
+  const network = await networkService.getNetworks(userId);
 
   try {
-    return res.status(httpStatus.OK).send()
+    return res.status(httpStatus.OK).send(network)
 
   } catch (error) {
     return res.status(httpStatus.BAD_REQUEST).send(error);

@@ -47,6 +47,10 @@ export async function getNetworksId(req: AuthenticatedRequest, res: Response) {
 }
 
 export async function deleteNetwork(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+  const { networkId } = req.params;
+
+  await networkService.deleteNetwork(userId, parseInt(networkId));
 
   try {
     return res.sendStatus(httpStatus.OK);

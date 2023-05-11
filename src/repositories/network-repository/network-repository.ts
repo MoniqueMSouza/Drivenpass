@@ -24,6 +24,14 @@ async function listNetworkById(userId:number, networkId:number) {
     })
 };
 
+async function remove(networkId:number) {
+    return prisma.network.delete({
+        where: {
+            id: networkId
+        },
+    })
+}
 
 
-export default { newNetwork, listNetwork, listNetworkById}
+
+export default { newNetwork, listNetwork, listNetworkById, remove}

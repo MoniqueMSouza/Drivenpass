@@ -1,18 +1,20 @@
 import { CreateCredentialParams } from "../../protocols";
 import { Credential } from "@prisma/client";
-import credentialRepositorie from "../../repositories/credential-repository/credential-repository.js"
+import credentialRepository from "../../repositories/credential-repository/credential-repository.js"
 import Cryptr from "cryptr";
 
-
-
+const cryptr = new Cryptr(process.env.CRYPTR_KEY);
 
 async function newCredential({ title, url, username, password, userId }: CreateCredentialParams): Promise<Credential> {
 
-    const cryptr = new Cryptr('SecretKey');
+    const duplicatedCredential = await credentialRepository.findTitleByUser(userId, title)
+    if (duplicatedCredential) {
+        throw { type: "DuplicatedTitleError", message: "Title already existis!" }
+    }
 
     const encryptedString = cryptr.encrypt(password);
 
-    return credentialRepositorie.newCredential({
+    return credentialRepository.newCredential({
         userId,
         title,
         url,
@@ -20,22 +22,38 @@ async function newCredential({ title, url, username, password, userId }: CreateC
         password: encryptedString,
     })
 }
-
-async function deleteCredential(userId:number, credentialId: number) {
-    const credential = await credentialRepositorie.findByIdCredential(credentialId);
+async function deleteCredential(userId: number, credentialId: number) {
+    const credential = await credentialRepository.findByIdCredential(credentialId);
 
     if (!credential || credential.userId !== userId) {
         throw { type: "BadRequest", message: "You can not do that!" };
     }
-     await credentialRepositorie.remove(credentialId);
+    await credentialRepository.remove(credentialId);
+  
 
-  }
+}
+async function getCredentials(userId: number) {
+
+    const credentials = await credentialRepository.getCredentials(userId)
+
+    if (credentials.length === 0) {
+        throw { type: "NotFoundError", message: "No result for this search!" };
+    }
+
+    credentials.map((credential) => (credential.password = cryptr.decrypt(credential.password)));
+    return credentials;
+}
+async function getCredentialsById( userId: number, credentialId: number): Promise<Credential> {
+
+    const credential = await credentialRepository.findByIdCredential(credentialId)
+
+    if (!credential || credential.userId !== userId) {
+        throw { type: "NotFoundError", message: "No result for this search!" }
+    }
+
+    credential.password = cryptr.decrypt(credential.password)
+    return credential
+}
 
 
-
-/*    const credential = await credentialRepositorie.findTitleByUser(userId, title)
-    if (credential) {
-        throw { type: "ConflictError", message: "Title already existis!" }
-    }*/
-
-export default { newCredential, deleteCredential }
+export default { newCredential, deleteCredential, getCredentialsById, getCredentials }

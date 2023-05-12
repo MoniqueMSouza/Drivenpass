@@ -42,9 +42,9 @@ async function getNetworkById(userId: number, networkId: number) {
 
 async function deleteNetwork(userId: number, networkId: number) {
 
-    const network = await networkRepositorie.listNetworkById(userId, networkId);
+    const network = await networkRepositorie.findById(networkId);
 
-    if (!network) {
+    if (!network || network.userId !== userId) {
         throw { type: "BadRequest", message: "You can not do that!" };
     }
     await networkRepositorie.remove(networkId);

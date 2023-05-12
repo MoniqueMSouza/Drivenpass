@@ -51,13 +51,16 @@ export async function getNetworksId(req: AuthenticatedRequest, res: Response) {
 export async function deleteNetwork(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
   const { networkId } = req.params;
-
-  await networkService.deleteNetwork(userId, parseInt(networkId));
+  if (!networkId) return res.sendStatus(httpStatus.BAD_REQUEST);
 
   try {
+    await networkService.deleteNetwork(userId, parseInt(networkId));
     return res.sendStatus(httpStatus.OK);
 
-  } catch (error) {
+  }  catch (error) {
+    if (error.type === 'NotFoundError') {
+      return res.status(httpStatus.CONFLICT).send(error);
+    }
     return res.status(httpStatus.BAD_REQUEST).send(error);
   }
-};
+}

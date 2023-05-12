@@ -35,13 +35,15 @@ export async function getNetworks(req: AuthenticatedRequest, res: Response) {
 export async function getNetworksId(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
   const { networkId } = req.params;
-
-  const network = await networkService.getNetworkById(userId, parseInt(networkId));
-
+  if (!networkId) return res.sendStatus(httpStatus.BAD_REQUEST);
   try {
+    const network = await networkService.getNetworkById(userId, parseInt(networkId));
     return res.status(httpStatus.OK).send(network)
 
   } catch (error) {
+    if (error.type === 'NotFoundError') {
+      return res.status(httpStatus.CONFLICT).send(error);
+    }
     return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 }
@@ -55,7 +57,7 @@ export async function deleteNetwork(req: AuthenticatedRequest, res: Response) {
   try {
     return res.sendStatus(httpStatus.OK);
 
-  } catch (error) {    
+  } catch (error) {
     return res.status(httpStatus.BAD_REQUEST).send(error);
   }
 };

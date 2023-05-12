@@ -3,19 +3,17 @@ import { Prisma } from '@prisma/client';
 
 async function newNetwork(data: Prisma.NetworkCreateManyInput) {
     return prisma.network.create({
-  data,
-});
+        data,
+    });
 };
-
-async function listNetwork(userId:number) {
+async function listNetwork(userId: number) {
     return prisma.network.findMany({
         where: {
             userId: userId,
         },
     })
 };
-
-async function listNetworkById(userId:number, networkId:number) {
+async function listNetworkById(userId: number, networkId: number) {
     return prisma.network.findMany({
         where: {
             userId: userId,
@@ -23,8 +21,20 @@ async function listNetworkById(userId:number, networkId:number) {
         },
     })
 };
+async function findById(id: number, select?: Prisma.UserSelect) {
+    const params: Prisma.NetworkFindUniqueArgs = {
+        where: {
+            id,
+        },
+    };
 
-async function remove(networkId:number) {
+    if (select) {
+        params.select = select;
+    }
+
+    return prisma.network.findUnique(params);
+}
+async function remove(networkId: number) {
     return prisma.network.delete({
         where: {
             id: networkId
@@ -34,4 +44,4 @@ async function remove(networkId:number) {
 
 
 
-export default { newNetwork, listNetwork, listNetworkById, remove}
+export default { newNetwork, listNetwork, listNetworkById, findById, remove }
